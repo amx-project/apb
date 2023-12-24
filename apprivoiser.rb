@@ -6,14 +6,15 @@ require 'find'
 INPUT_PATH = 'input.csv'
 CSV_PATH = 'output.csv'
 MD_PATH = 'output.md'
-KEYWORD = 'bldg'
+PATTERN = '*_bldg_*_op.gml'
 
 def apprivoiser(url, fn, csv, md)
+  $stderr.print "apprivoiser #{url}\n"
   Dir.mktmpdir {|tmpdir|
     if /zip$/.match(url)
       system <<-EOS
 curl -o #{tmpdir}/#{fn}.zip #{url}
-unzip -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '*#{KEYWORD}*'
+unzip -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
       EOS
     elsif /7z$/.match(url)
       p url
@@ -24,7 +25,7 @@ curl -o #{tmpdir}/#{fn}.7z #{url}
 mkdir #{tmpdir}/#{fn}
       EOS
       Find.find("#{tmpdir}/7zx") {|path|
-        next unless /#{KEYWORD}/.match path
+        next unless /#{PATTERN}.gsub('*', '.*')/.match path
         system <<-EOS
 mv #{path} #{tmpdir}/#{fn}/#{File.basename(path)}
         EOS
@@ -39,7 +40,12 @@ tar cvzf #{fn}.tar.gz -C #{tmpdir} #{fn}
     csv.print <<-EOS
 #{cid},#{filename}
     EOS
+    csv.flush
     md.print <<-EOS
+- [#{filename}](https://smb.optgeo.org/ipfs/#{cid}?filename=#{filename})
+    EOS
+    md.flush
+    $stderr.print <<-EOS
 - [#{filename}](https://smb.optgeo.org/ipfs/#{cid}?filename=#{filename})
     EOS
   }
