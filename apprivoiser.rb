@@ -17,15 +17,13 @@ curl -o #{tmpdir}/#{fn}.zip #{url}
 unzip -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
       EOS
     elsif /7z$/.match(url)
-      p url
-      p fn
       system <<-EOS
 curl -o #{tmpdir}/#{fn}.7z #{url}
 7z x -o#{tmpdir}/7zx #{tmpdir}/#{fn}.7z
 mkdir #{tmpdir}/#{fn}
       EOS
       Find.find("#{tmpdir}/7zx") {|path|
-        next unless /#{PATTERN}.gsub('*', '.*')/.match path
+        next unless /#{PATTERN.gsub('*', '.*')}/.match path
         system <<-EOS
 mv #{path} #{tmpdir}/#{fn}/#{File.basename(path)}
         EOS
