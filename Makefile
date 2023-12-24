@@ -1,0 +1,3 @@
+default:
+	ruby apprivoiser.rb
+
