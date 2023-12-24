@@ -4,11 +4,9 @@ require 'zip'
 require 'find'
 
 INPUT_PATH = 'input.csv'
-CSV_PATH = 'output.csv'
-MD_PATH = 'output.md'
 PATTERN = '*_bldg_*_op.gml'
 
-def apprivoiser(url, fn, csv, md)
+def apprivoiser(url, fn)
   $stderr.print "apprivoiser #{url}\n"
   Dir.mktmpdir {|tmpdir|
     if /zip$/.match(url)
@@ -35,14 +33,6 @@ mv #{path} #{tmpdir}/#{fn}/#{File.basename(path)}
 tar cvzf #{fn}.tar.gz -C #{tmpdir} #{fn}
     EOS
     (cid, filename) = `ipfs add #{fn}.tar.gz`.split[1..2]
-    csv.print <<-EOS
-#{cid},#{filename}
-    EOS
-    csv.flush
-    md.print <<-EOS
-- [#{filename}](https://smb.optgeo.org/ipfs/#{cid}?filename=#{filename})
-    EOS
-    md.flush
     $stderr.print <<-EOS
 - [#{filename}](https://smb.optgeo.org/ipfs/#{cid}?filename=#{filename})
     EOS
@@ -53,10 +43,5 @@ File.foreach(INPUT_PATH) {|l|
   url = l.strip
   next if /^#/.match(url)
   fn = url.split('/')[-1].split('_')[0..2].join('_')
-  csv = File.open(CSV_PATH, 'w')
-  md = File.open(MD_PATH, 'w')
-  apprivoiser(url, fn, csv, md)
-  csv.close
-  md.close
+  apprivoiser(url, fn)
 }
-
