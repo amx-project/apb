@@ -10,6 +10,7 @@ def apprivoiser(url, fn)
   $stderr.print "apprivoiser #{url}\n"
   Dir.mktmpdir {|tmpdir|
     if /zip$/.match(url)
+return ##
       system <<-EOS
 curl -o #{tmpdir}/#{fn}.zip #{url}
 unzip -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
@@ -17,7 +18,7 @@ unzip -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
     elsif /7z$/.match(url)
       system <<-EOS
 curl -o #{tmpdir}/#{fn}.7z #{url}
-7z x -o#{tmpdir}/7zx #{tmpdir}/#{fn}.7z
+7z x -o#{tmpdir}/7zx #{tmpdir}/#{fn}.7z -ir!"#{PATTERN}"
 mkdir #{tmpdir}/#{fn}
       EOS
       Find.find("#{tmpdir}/7zx") {|path|
