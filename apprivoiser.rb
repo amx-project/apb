@@ -10,7 +10,6 @@ def apprivoiser(url, fn)
   $stderr.print "apprivoiser #{url}\n"
   Dir.mktmpdir {|tmpdir|
     if /zip$/.match(url)
-return ##
       system <<-EOS
 curl -o #{tmpdir}/#{fn}.zip #{url}
 unzip -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
