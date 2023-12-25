@@ -8,11 +8,13 @@ PATTERN = '*_bldg_*_op.gml'
 
 def apprivoiser(url, fn)
   $stderr.print "apprivoiser #{url}\n"
+  dst_path = "#{fn}.tar.gz"
+  return if File.exist?(dst_path)
   Dir.mktmpdir {|tmpdir|
     if /zip$/.match(url)
       system <<-EOS
 curl -o #{tmpdir}/#{fn}.zip #{url}
-unzip -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
+unzip -q -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
       EOS
     elsif /7z$/.match(url)
       system <<-EOS
@@ -30,7 +32,7 @@ mv #{path} #{tmpdir}/#{fn}/#{File.basename(path)}
       raise "Could not handle #{url}."
     end
     system <<-EOS
-tar cvzf #{fn}.tar.gz -C #{tmpdir} #{fn}
+tar czf #{dst_path} -C #{tmpdir} #{fn}
     EOS
     (cid, filename) = `ipfs add #{fn}.tar.gz`.split[1..2]
     $stderr.print <<-EOS
@@ -43,5 +45,7 @@ File.foreach(INPUT_PATH) {|l|
   url = l.strip
   next if /^#/.match(url)
   fn = url.split('/')[-1].split('_')[0..2].join('_')
+#  next unless fn[0..1].to_i > 35
+#  next if /^22211/.match fn
   apprivoiser(url, fn)
 }
