@@ -4,7 +4,8 @@ require 'zip'
 require 'find'
 
 INPUT_PATH = 'input.csv'
-PATTERN = '*_bldg_*_op.gml'
+#PATTERN = '*_bldg_*.gml'
+PATTERN = 'bldg'
 
 def apprivoiser(url, fn)
   $stderr.print "apprivoiser #{url}\n"
@@ -17,8 +18,22 @@ curl -o #{tmpdir}/#{fn}.zip #{url}
 unzip -q -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
       EOS
     elsif /7z$/.match(url)
+#See https://github.com/curl/curl/issues/1084 on why we are not doing: 
+#curl --retry-all-errors --retry 10 -C - -o #{tmpdir}/#{fn}.7z #{url}
       system <<-EOS
-curl -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
+curl -C - -o #{tmpdir}/#{fn}.7z #{url}
 7z x -o#{tmpdir}/7zx #{tmpdir}/#{fn}.7z -ir!"#{PATTERN}"
 mkdir #{tmpdir}/#{fn}
       EOS
@@ -45,7 +60,7 @@ File.foreach(INPUT_PATH) {|l|
   url = l.strip
   next if /^#/.match(url)
   fn = url.split('/')[-1].split('_')[0..2].join('_')
-#  next unless fn[0..1].to_i > 35
-#  next if /^22211/.match fn
+#  next unless fn[0..1].to_i == 22 
+#  next unless /^22221/.match fn
   apprivoiser(url, fn)
 }
