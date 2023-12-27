@@ -61,6 +61,6 @@ File.foreach(INPUT_PATH) {|l|
   next if /^#/.match(url)
   fn = url.split('/')[-1].split('_')[0..2].join('_')
 #  next unless fn[0..1].to_i == 22 
-#  next unless /^22221/.match fn
+#  next unless /^22220/.match fn
   apprivoiser(url, fn)
 }
