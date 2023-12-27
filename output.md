@@ -58,6 +58,8 @@
 - [22208_ito-shi_2022.tar.gz](https://smb.optgeo.org/ipfs/QmXRAaZFD2wGN7wgazvT9AwKDAytgToJjKvPdGn7LvNatL?filename=22208_ito-shi_2022.tar.gz)
 - [22222_izu-shi_2022.tar.gz](https://smb.optgeo.org/ipfs/QmZsbTJJoNBXSxe6LekykBQb1iFWqbpc8Z1KG2CRVtCf8f?filename=22222_izu-shi_2022.tar.gz)
 - [22225_izunokuni-shi_2022.tar.gz](https://smb.optgeo.org/ipfs/QmcPpsYPzPZihoq5BW6yfDXMWnz3xtQA52nKJdwc5QwfHT?filename=22225_izunokuni-shi_2022.tar.gz)
+- [22302_kawazu-cho_2022.tar.gz](https://smb.optgeo.org/ipfs/QmTFNx6Fi66MZhgohTypoX1Mzm1trTnFA1eptgVbZRAsSc?filename=22302_kawazu-cho_2022.tar.gz)
+- [22341_shimizu-cho_2022.tar.gz](https://smb.optgeo.org/ipfs/QmbPLtg2UGmiziS3e5BgvfGQS6JmDsZUdKjvFsTrWtXRvU?filename=22341_shimizu-cho_2022.tar.gz)
 - [22461_mori-machi_2022.tar.gz](https://smb.optgeo.org/ipfs/QmXUK28Lu9CApkk8PzzsLVCs6NYwp2P4ExwDqdF4JypSkU?filename=22461_mori-machi_2022.tar.gz)
 - [23100_nagoya-shi_2020.tar.gz](https://smb.optgeo.org/ipfs/QmVfdraH87mPxTenEaMhVc344PRxDoWZtrZEh4ihVyEe6n?filename=23100_nagoya-shi_2020.tar.gz)
 - [23202_okazaki-shi_2020.tar.gz](https://smb.optgeo.org/ipfs/Qmbe8xVHXgw7BWnMSekXeQ2xjRbEnn59v8bQTGUPUVohcn?filename=23202_okazaki-shi_2020.tar.gz)
