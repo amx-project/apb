@@ -4,8 +4,9 @@ require 'zip'
 require 'find'
 
 INPUT_PATH = 'input.csv'
-#PATTERN = '*_bldg_*.gml'
-PATTERN = 'bldg'
+PATTERN_ZIP = '*_bldg_*.gml'
+PATTERN_7Z = 'bldg'
+N_ATTEMPTS = 10
 
 def apprivoiser(url, fn)
   $stderr.print "apprivoiser #{url}\n"
@@ -13,32 +14,28 @@ def apprivoiser(url, fn)
   return if File.exist?(dst_path)
   Dir.mktmpdir {|tmpdir|
     if /zip$/.match(url)
-      system <<-EOS
-curl -o #{tmpdir}/#{fn}.zip #{url}
-unzip -q -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN}'
+      cmd = <<-EOS
+curl -C - -o #{tmpdir}/#{fn}.zip #{url}
       EOS
+      cmd = cmd * N_ATTEMPTS
+      cmd += <<-EOS
+unzip -q -d #{tmpdir}/#{fn} -j #{tmpdir}/#{fn}.zip '#{PATTERN_ZIP}'
+      EOS
+      print cmd
+      system cmd
     elsif /7z$/.match(url)
-#See https://github.com/curl/curl/issues/1084 on why we are not doing: 
-#curl --retry-all-errors --retry 10 -C - -o #{tmpdir}/#{fn}.7z #{url}
-      system <<-EOS
+      cmd = <<-EOS
 curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-curl -C - -o #{tmpdir}/#{fn}.7z #{url}
-7z x -o#{tmpdir}/7zx #{tmpdir}/#{fn}.7z -ir!"#{PATTERN}"
+      EOS
+      cmd = cmd * N_ATTEMPTS
+      cmd += <<-EOS
+7z x -o#{tmpdir}/7zx #{tmpdir}/#{fn}.7z -ir!"#{PATTERN_7Z}"
 mkdir #{tmpdir}/#{fn}
       EOS
+      print cmd
+      system cmd
       Find.find("#{tmpdir}/7zx") {|path|
-        next unless /#{PATTERN.gsub('*', '.*')}/.match path
+        next unless /#{PATTERN_7Z.gsub('*', '.*')}/.match path
         system <<-EOS
 mv #{path} #{tmpdir}/#{fn}/#{File.basename(path)}
         EOS
